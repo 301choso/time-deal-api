@@ -1,0 +1,66 @@
+package kr.rebe.deal.service;
+
+import kr.rebe.deal.entity.Member;
+import kr.rebe.deal.entity.Session;
+import kr.rebe.deal.repository.MemberRepository;
+import kr.rebe.deal.vo.LoginVO;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class AuthServiceTest {
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private AuthService authService;
+
+    LoginVO member11 = new LoginVO();
+    Member member = new Member();
+    Member mem;
+
+    @BeforeEach
+    void beforeTest() {
+        // 회원추가
+        member = Member.builder()
+                .loginId("member1")
+                .loginPwd("1234")
+                .build();
+        mem = memberRepository.save(member);
+    }
+
+    @AfterEach
+    void afterTest() {
+        // 회원 삭제
+        //Long memberSeq = mem.getMemberSeq();
+        //memberRepository.deleteById(memberSeq);
+    }
+
+    @Test
+    @DisplayName("로그인 값 체크_성공")
+    void test1() {
+        member11.setLoginId("member1");
+        member11.setLoginPwd("1234");
+        boolean b = authService.loginCheck(member11);
+        Assertions.assertEquals(true, b);
+    }
+
+    @Test
+    @DisplayName("로그인 값 체크_실패")
+    void test2() {
+        member11.setLoginId("member1");
+        member11.setLoginPwd("12345");
+        boolean b = authService.loginCheck(member11);
+        Assertions.assertEquals(false, b);
+    }
+
+    @Test
+    @DisplayName("세션 생성 확인")
+    void test3() {
+        Session session = authService.addSession(mem);
+        Assertions.assertNotNull(session);
+    }
+}
