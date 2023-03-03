@@ -4,13 +4,13 @@ import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.repository.MemberRepository;
 import kr.rebe.deal.repository.SessionRepository;
-import kr.rebe.deal.vo.LoginVO;
+import kr.rebe.deal.dto.LoginDto;
+import kr.rebe.deal.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,12 +22,12 @@ public class AuthService {
 
     /**
      * 로그인 값 체크
-     * @param loginVO
+     * @param loginDto
      * @return boolean
      * */
     @Transactional
-    public boolean loginCheck(LoginVO loginVO) {
-        Member member = memberRepository.findByLoginIdAndLoginPwd(loginVO.getLoginId(), loginVO.getLoginPwd()).orElse(null);
+    public boolean logIn(LoginDto loginDto) {
+        Member member = memberRepository.findByLoginIdAndLoginPwd(loginDto.getLoginId(), loginDto.getLoginPwd()).orElse(null);
         if (member == null) {
             return false;
         }
@@ -46,5 +46,12 @@ public class AuthService {
                 .regDate(LocalDateTime.now())
                 .build();
         return sessionRepository.save(session);
+    }
+
+    /**
+     * 세션 삭제
+     * */
+    public void removeSession(MemberDto memberDto) {
+        sessionRepository.deleteAllByMemberSeq(memberDto.getMemberSeq());
     }
 }

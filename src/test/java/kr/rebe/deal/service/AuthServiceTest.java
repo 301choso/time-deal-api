@@ -1,9 +1,10 @@
 package kr.rebe.deal.service;
 
+import kr.rebe.deal.dto.LoginDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.repository.MemberRepository;
-import kr.rebe.deal.vo.LoginVO;
+import kr.rebe.deal.repository.SessionRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,10 +17,13 @@ class AuthServiceTest {
     private MemberRepository memberRepository;
 
     @Autowired
+    private SessionRepository sessionRepository;
+
+    @Autowired
     private AuthService authService;
 
-    LoginVO member11 = new LoginVO();
-    Member member = new Member();
+    LoginDto member11 = new LoginDto();
+    Member member;
     Member mem;
 
     @BeforeEach
@@ -35,8 +39,11 @@ class AuthServiceTest {
     @AfterEach
     void afterTest() {
         // 회원 삭제
-        //Long memberSeq = mem.getMemberSeq();
-        //memberRepository.deleteById(memberSeq);
+        Long memberSeq = mem.getMemberSeq();
+        sessionRepository.deleteAll();
+        memberRepository.deleteAll();
+        /*sessionRepository.deleteAllByMemberSeq(memberSeq);
+        memberRepository.deleteByMemberSeq(memberSeq);*/
     }
 
     @Test
@@ -44,7 +51,7 @@ class AuthServiceTest {
     void test1() {
         member11.setLoginId("member1");
         member11.setLoginPwd("1234");
-        boolean b = authService.loginCheck(member11);
+        boolean b = authService.logIn(member11);
         Assertions.assertEquals(true, b);
     }
 
@@ -53,7 +60,7 @@ class AuthServiceTest {
     void test2() {
         member11.setLoginId("member1");
         member11.setLoginPwd("12345");
-        boolean b = authService.loginCheck(member11);
+        boolean b = authService.logIn(member11);
         Assertions.assertEquals(false, b);
     }
 

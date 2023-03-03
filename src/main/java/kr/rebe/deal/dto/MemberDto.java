@@ -1,28 +1,25 @@
-package kr.rebe.deal.entity;
+package kr.rebe.deal.dto;
 
-import kr.rebe.deal.dto.MemberDto;
-import lombok.*;
+import kr.rebe.deal.entity.Member;
+import lombok.Builder;
+import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
-@Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+@Data
+public class MemberDto {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberSeq;
 
     private String memberName;
 
     private String loginType;
 
+    @NotEmpty
     private String loginId;
 
+    @NotEmpty
     private String loginPwd;
 
     private String hpNo;
@@ -34,7 +31,7 @@ public class Member {
     private LocalDateTime joinDate;
 
     @Builder
-    public Member(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate) {
+    public MemberDto(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate) {
         this.memberSeq = memberSeq;
         this.memberName = memberName;
         this.loginType = loginType;
@@ -45,13 +42,17 @@ public class Member {
         this.leaveYn = leaveYn;
         this.joinDate = joinDate;
     }
-    public MemberDto toDto() {
-        return MemberDto.builder()
-                .memberSeq(memberSeq)
+
+    public Member toEntity() {
+        return Member.builder()
                 .memberName(memberName)
+                .loginType("Y")
                 .loginId(loginId)
-                .loginType(loginType)
+                .loginPwd(loginPwd)
+                .hpNo(hpNo)
+                .email(email)
+                .leaveYn("N")
+                .joinDate(LocalDateTime.now())
                 .build();
     }
-
 }

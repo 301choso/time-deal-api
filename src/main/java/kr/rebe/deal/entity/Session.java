@@ -1,18 +1,15 @@
 package kr.rebe.deal.entity;
 
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@RequiredArgsConstructor
 @SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Session {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
