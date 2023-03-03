@@ -25,8 +25,6 @@ public class MemberController {
     private final MemberService memberService;
     /**
      * 회원가입
-     * @param memberDto
-     * @return member
      * */
     @PostMapping("/join")
     public ResponseEntity<Member> join(@ModelAttribute("memberDto") @Valid MemberDto memberDto) {
@@ -36,8 +34,6 @@ public class MemberController {
 
     /**
      * 회원 리스트 조회
-     * @param
-     * @return memeberList
      * */
     @GetMapping()
     public ResponseEntity<List<MemberDto>> memberList() {
@@ -48,8 +44,6 @@ public class MemberController {
 
     /**
      * 회원 단일 조회
-     * @param
-     * @return memeberList
      * */
     @GetMapping("/{memberSeq}")
     public ResponseEntity<MemberDto> member(@PathVariable Long memberSeq) { // 권한 확인
@@ -57,4 +51,12 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
+    /**
+     * 아이디 중복 확인
+     * */
+    @GetMapping("/idCheck")
+    public ResponseEntity loginIdCheck(@RequestParam("loginId") String loginId) {
+        boolean result = memberService.loginIdCheck(loginId);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 }

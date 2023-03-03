@@ -17,4 +17,6 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     Optional<Member> findByLoginIdAndLoginPwd(String loginId, String loginPwd);
 
     List<Member> findAll();
+
+    Member findByLoginId(String loginId);
 }

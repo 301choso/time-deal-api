@@ -1,6 +1,7 @@
 package kr.rebe.deal.service;
 
 import kr.rebe.deal.dto.LoginDto;
+import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.repository.MemberRepository;
@@ -8,8 +9,6 @@ import kr.rebe.deal.repository.SessionRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AuthServiceTest {
@@ -22,45 +21,46 @@ class AuthServiceTest {
     @Autowired
     private AuthService authService;
 
-    LoginDto member11 = new LoginDto();
-    Member member;
+    @Autowired
+    private MemberService memberService;
+
+    LoginDto loginDto = new LoginDto();
+
+    MemberDto memberDto;
     Member mem;
 
     @BeforeEach
     void beforeTest() {
         // 회원추가
-        member = Member.builder()
+        memberDto = MemberDto.builder()
                 .loginId("member1")
                 .loginPwd("1234")
                 .build();
-        mem = memberRepository.save(member);
+        mem = memberService.joinMember(memberDto);
     }
 
     @AfterEach
     void afterTest() {
         // 회원 삭제
-        Long memberSeq = mem.getMemberSeq();
         sessionRepository.deleteAll();
         memberRepository.deleteAll();
-        /*sessionRepository.deleteAllByMemberSeq(memberSeq);
-        memberRepository.deleteByMemberSeq(memberSeq);*/
     }
 
     @Test
     @DisplayName("로그인 값 체크_성공")
     void test1() {
-        member11.setLoginId("member1");
-        member11.setLoginPwd("1234");
-        boolean b = authService.logIn(member11);
+        loginDto.setLoginId("member1");
+        loginDto.setLoginPwd("1234");
+        boolean b = authService.logIn(loginDto);
         Assertions.assertEquals(true, b);
     }
 
     @Test
     @DisplayName("로그인 값 체크_실패")
     void test2() {
-        member11.setLoginId("member1");
-        member11.setLoginPwd("12345");
-        boolean b = authService.logIn(member11);
+        loginDto.setLoginId("member1");
+        loginDto.setLoginPwd("12345");
+        boolean b = authService.logIn(loginDto);
         Assertions.assertEquals(false, b);
     }
 

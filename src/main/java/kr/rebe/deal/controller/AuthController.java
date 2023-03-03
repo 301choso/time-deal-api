@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * 인증 Controller
  * */
@@ -25,7 +27,7 @@ public class AuthController {
      * 로그인
      * */
     @GetMapping("/logIn")
-    public ResponseEntity logIn(@ModelAttribute("loginDto") LoginDto loginDto) {
+    public ResponseEntity logIn(@ModelAttribute("loginDto") @Valid LoginDto loginDto) {
         boolean result = authService.logIn(loginDto);
         return ResponseEntity.status(result == true ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(null);
     }
