@@ -35,8 +35,10 @@ public class MemberDto {
 
     private LocalDateTime joinDate;
 
+    private LocalDateTime regDate;
+
     @Builder
-    public MemberDto(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate) {
+    public MemberDto(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate, LocalDateTime regDate) {
         this.memberSeq = memberSeq;
         this.memberName = memberName;
         this.loginType = loginType;
@@ -46,18 +48,20 @@ public class MemberDto {
         this.email = email;
         this.leaveYn = leaveYn;
         this.joinDate = joinDate;
+        this.regDate = regDate;
     }
 
     public Member toEntity() {
         return Member.builder()
                 .memberName(memberName)
-                .loginType("Y")
+                .loginType(loginType)
                 .loginId(loginId)
                 .loginPwd(loginPwd)
                 .hpNo(hpNo)
                 .email(email)
                 .leaveYn("N")
                 .joinDate(LocalDateTime.now())
+                .regDate(LocalDateTime.now())
                 .build();
     }
 }

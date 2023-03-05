@@ -10,6 +10,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.servlet.http.HttpServletRequest;
+
 @SpringBootTest
 class AuthServiceTest {
     @Autowired
@@ -48,19 +50,19 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("로그인 값 체크_성공")
-    void test1() {
+    void test1(HttpServletRequest request) {
         loginDto.setLoginId("member1");
         loginDto.setLoginPwd("1234");
-        boolean b = authService.logIn(loginDto);
+        boolean b = authService.logIn(loginDto, request);
         Assertions.assertEquals(true, b);
     }
 
     @Test
     @DisplayName("로그인 값 체크_실패")
-    void test2() {
+    void test2(HttpServletRequest request) {
         loginDto.setLoginId("member1");
         loginDto.setLoginPwd("12345");
-        boolean b = authService.logIn(loginDto);
+        boolean b = authService.logIn(loginDto, request);
         Assertions.assertEquals(false, b);
     }
 

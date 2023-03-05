@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class MemberService {
         Member member = memberDto.toEntity();
 
         Member result = null;
-        if (loginIdCheck(memberDto.getLoginId())) {
+        if (checkLoginId(memberDto.getLoginId())) {
             result = memberRepository.save(member);
         }
         return result;
@@ -51,7 +52,23 @@ public class MemberService {
     /**
      * 아이디 중복 확인
      * */
-    public boolean loginIdCheck(String loginId) {
+    public boolean checkLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId) == null ? true : false;
+    }
+
+    /**
+     * 회원 탈퇴
+     * */
+    public boolean leaveMember(Long memberSeq) {
+        if (memberRepository.findById(memberSeq) == null) {
+            return false;
+        }
+        Member member = Member.builder()
+                .memberSeq(memberSeq)
+                .leaveYn("Y")
+                .regDate(LocalDateTime.now())
+                .build();
+        memberRepository.save(member);
+        return true;
     }
 }

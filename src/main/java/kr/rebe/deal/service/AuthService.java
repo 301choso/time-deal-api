@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,18 +23,26 @@ public class AuthService {
     private final SessionRepository sessionRepository;
 
     /**
-     * 로그인 값 체크
+     *  값 체크
      * */
     @Transactional
-    public boolean logIn(LoginDto loginDto) {
+    public boolean logIn(LoginDto loginDto, HttpServletRequest request) {
         Member byLoginId = memberRepository.findByLoginId(loginDto.getLoginId());
-        if (byLoginId != null) {
+        if (byLoginId != null && byLoginId.getLeaveYn().equals("N")) {
             if (BCrypt.checkpw(loginDto.getLoginPwd(), byLoginId.getLoginPwd())) {
-                addSession(byLoginId);
+                setSession(request, byLoginId);
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     *  세션 설정
+     * */
+    private void setSession(HttpServletRequest request, Member byLoginId) {
+        Session session = addSession(byLoginId);
+        request.setAttribute("sessionAuth", session.getAccessToken());
     }
 
     /**

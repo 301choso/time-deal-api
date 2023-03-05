@@ -1,6 +1,7 @@
 package kr.rebe.deal.entity;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @SuperBuilder
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Session {
 

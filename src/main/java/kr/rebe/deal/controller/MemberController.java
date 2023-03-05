@@ -27,7 +27,7 @@ public class MemberController {
      * 회원가입
      * */
     @PostMapping("/join")
-    public ResponseEntity<Member> join(@ModelAttribute("memberDto") @Valid MemberDto memberDto) {
+    public ResponseEntity<Member> joinMember(@ModelAttribute("memberDto") @Valid MemberDto memberDto) {
         Member member = memberService.joinMember(memberDto);
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
@@ -36,7 +36,7 @@ public class MemberController {
      * 회원 리스트 조회
      * */
     @GetMapping()
-    public ResponseEntity<List<MemberDto>> memberList() {
+    public ResponseEntity<List<MemberDto>> getMemberList() {
         // 세션에서 권한 확인
         List<MemberDto> memberList = memberService.getMemberList();
         return ResponseEntity.status(HttpStatus.OK).body(memberList);
@@ -46,7 +46,7 @@ public class MemberController {
      * 회원 단일 조회
      * */
     @GetMapping("/{memberSeq}")
-    public ResponseEntity<MemberDto> member(@PathVariable Long memberSeq) { // 권한 확인
+    public ResponseEntity<MemberDto> getMember(@PathVariable Long memberSeq) { // 권한 확인
         MemberDto member = memberService.getMember(memberSeq);
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
@@ -55,8 +55,17 @@ public class MemberController {
      * 아이디 중복 확인
      * */
     @GetMapping("/idCheck")
-    public ResponseEntity loginIdCheck(@RequestParam("loginId") String loginId) {
-        boolean result = memberService.loginIdCheck(loginId);
+    public ResponseEntity checkLoginId(@RequestParam("loginId") String loginId) {
+        boolean result = memberService.checkLoginId(loginId);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    /**
+     * 회원 탈퇴
+     * */
+    @PatchMapping("/leave/{memberSeq}")
+    public ResponseEntity leaveMember(@RequestParam("memberSeq") Long memberSeq) {
+        boolean result = memberService.leaveMember(memberSeq);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

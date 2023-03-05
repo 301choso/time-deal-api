@@ -67,13 +67,13 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("아이디 중복 확인")
-    void loginIdCheck() {
+    void checkLoginId() {
         MemberDto memberDto1 = MemberDto.builder()
                 .loginId("member1")
                 .loginPwd("1111")
                 .build();
         Member member = memberService.joinMember(memberDto1);
-        boolean result = memberService.loginIdCheck("member1");
+        boolean result = memberService.checkLoginId("member1");
         Assertions.assertFalse(result);
         memberRepository.deleteById(member.getMemberSeq());
     }

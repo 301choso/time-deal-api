@@ -33,8 +33,10 @@ public class Member {
 
     private LocalDateTime joinDate;
 
+    private LocalDateTime regDate;
+
     @Builder
-    public Member(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate) {
+    public Member(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate, LocalDateTime regDate) {
         this.memberSeq = memberSeq;
         this.memberName = memberName;
         this.loginType = loginType;
@@ -44,13 +46,16 @@ public class Member {
         this.email = email;
         this.leaveYn = leaveYn;
         this.joinDate = joinDate;
+        this.regDate = regDate;
     }
+
     public MemberDto toDto() {
         return MemberDto.builder()
                 .memberSeq(memberSeq)
                 .memberName(memberName)
                 .loginId(loginId)
                 .loginType(loginType)
+                .regDate(regDate)
                 .build();
     }
 
