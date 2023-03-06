@@ -1,6 +1,8 @@
 package kr.rebe.deal.dto;
 
 import kr.rebe.deal.entity.Member;
+import kr.rebe.deal.enums.LogInTypeEnum;
+import kr.rebe.deal.enums.YnEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,7 +18,7 @@ public class MemberDto {
 
     private String memberName;
 
-    private String loginType;
+    private LogInTypeEnum loginType;
 
     @NotEmpty(message = "아이디를 입력해주세요.")
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "영어, 숫자만 입력해주세요.")
@@ -31,14 +33,14 @@ public class MemberDto {
 
     private String email;
 
-    private String leaveYn;
+    private YnEnum leaveYn;
 
     private LocalDateTime joinDate;
 
     private LocalDateTime regDate;
 
     @Builder
-    public MemberDto(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate, LocalDateTime regDate) {
+    public MemberDto(Long memberSeq, String memberName, LogInTypeEnum loginType, String loginId, String loginPwd, String hpNo, String email, YnEnum leaveYn, LocalDateTime joinDate, LocalDateTime regDate) {
         this.memberSeq = memberSeq;
         this.memberName = memberName;
         this.loginType = loginType;
@@ -59,7 +61,7 @@ public class MemberDto {
                 .loginPwd(loginPwd)
                 .hpNo(hpNo)
                 .email(email)
-                .leaveYn("N")
+                .leaveYn(leaveYn)
                 .joinDate(LocalDateTime.now())
                 .regDate(LocalDateTime.now())
                 .build();

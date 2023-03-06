@@ -1,12 +1,11 @@
 package kr.rebe.deal.entity;
 
 import kr.rebe.deal.dto.MemberDto;
+import kr.rebe.deal.enums.LogInTypeEnum;
+import kr.rebe.deal.enums.YnEnum;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +18,8 @@ public class Member {
 
     private String memberName;
 
-    private String loginType;
+    @Enumerated(EnumType.STRING)
+    private LogInTypeEnum loginType;
 
     private String loginId;
 
@@ -29,14 +29,15 @@ public class Member {
 
     private String email;
 
-    private String leaveYn;
+    @Enumerated(EnumType.STRING)
+    private YnEnum leaveYn = YnEnum.N;
 
     private LocalDateTime joinDate;
 
     private LocalDateTime regDate;
 
     @Builder
-    public Member(Long memberSeq, String memberName, String loginType, String loginId, String loginPwd, String hpNo, String email, String leaveYn, LocalDateTime joinDate, LocalDateTime regDate) {
+    public Member(Long memberSeq, String memberName, LogInTypeEnum loginType, String loginId, String loginPwd, String hpNo, String email, YnEnum leaveYn, LocalDateTime joinDate, LocalDateTime regDate) {
         this.memberSeq = memberSeq;
         this.memberName = memberName;
         this.loginType = loginType;

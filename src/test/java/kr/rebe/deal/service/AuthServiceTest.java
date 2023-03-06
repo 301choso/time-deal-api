@@ -7,10 +7,12 @@ import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.repository.MemberRepository;
 import kr.rebe.deal.repository.SessionRepository;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @SpringBootTest
 class AuthServiceTest {
@@ -31,6 +33,12 @@ class AuthServiceTest {
     MemberDto memberDto;
     Member mem;
 
+    @Mock
+    HttpServletRequest request;
+
+    @Mock
+    HttpServletResponse response;
+
     @BeforeEach
     void beforeTest() {
         // 회원추가
@@ -50,19 +58,19 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("로그인 값 체크_성공")
-    void test1(HttpServletRequest request) {
+    void test1() {
         loginDto.setLoginId("member1");
         loginDto.setLoginPwd("1234");
-        boolean b = authService.logIn(loginDto, request);
+        boolean b = authService.logIn(loginDto, request, response);
         Assertions.assertEquals(true, b);
     }
 
     @Test
     @DisplayName("로그인 값 체크_실패")
-    void test2(HttpServletRequest request) {
+    void test2() {
         loginDto.setLoginId("member1");
         loginDto.setLoginPwd("12345");
-        boolean b = authService.logIn(loginDto, request);
+        boolean b = authService.logIn(loginDto, request, response);
         Assertions.assertEquals(false, b);
     }
 

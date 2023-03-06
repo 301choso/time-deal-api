@@ -1,9 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost/deal
+    url: jdbc:mysql://localhost:3306/deal
     username: ${database.username}
     password: ${database.password}
+  # swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 server:
   port: 8001

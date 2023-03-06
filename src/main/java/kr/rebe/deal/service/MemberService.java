@@ -1,6 +1,7 @@
 package kr.rebe.deal.service;
 
 import kr.rebe.deal.entity.Member;
+import kr.rebe.deal.enums.YnEnum;
 import kr.rebe.deal.repository.MemberRepository;
 import kr.rebe.deal.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,7 @@ public class MemberService {
         }
         Member member = Member.builder()
                 .memberSeq(memberSeq)
-                .leaveYn("Y")
+                .leaveYn(YnEnum.Y)
                 .regDate(LocalDateTime.now())
                 .build();
         memberRepository.save(member);
