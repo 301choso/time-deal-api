@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,16 +61,12 @@ public class MemberService {
     /**
      * 회원 탈퇴
      * */
+    @Transactional
     public boolean leaveMember(Long memberSeq) {
-        if (memberRepository.findById(memberSeq) == null) {
+        Member member = memberRepository.findById(memberSeq).orElse(null);
+        if (member == null) {
             return false;
         }
-        Member member = Member.builder()
-                .memberSeq(memberSeq)
-                .leaveYn(YnEnum.Y)
-                .regDate(LocalDateTime.now())
-                .build();
-        memberRepository.save(member);
-        return true;
+        return memberRepository.updateLeaveYn(memberSeq, YnEnum.Y, LocalDateTime.now()) > 0 ? true : false;
     }
 }

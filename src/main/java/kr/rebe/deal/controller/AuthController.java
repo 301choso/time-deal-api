@@ -41,9 +41,9 @@ public class AuthController {
     /**
      * 로그아웃
      * */
-    @PostMapping("/logOut")
-    public ResponseEntity logOut(@ModelAttribute("memberDto") MemberDto memberDto) {
-        authService.removeSession(memberDto);
+    @DeleteMapping("/logOut/{memberSeq}")
+    public ResponseEntity logOut(@PathVariable("memberSeq") Long memberSeq) {
+        authService.removeSession(memberSeq);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

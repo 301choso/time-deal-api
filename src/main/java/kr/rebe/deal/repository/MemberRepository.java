@@ -1,11 +1,15 @@
 package kr.rebe.deal.repository;
 
 import kr.rebe.deal.entity.Member;
+import kr.rebe.deal.enums.YnEnum;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 회원 Repository Interface
@@ -17,4 +21,8 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     List<Member> findAll();
 
     Member findByLoginId(String loginId);
+
+    @Modifying
+    @Query("Update Member m set m.leaveYn=:ynEnum, m.regDate=:regDate where m.memberSeq=:memberSeq")
+    int updateLeaveYn(Long memberSeq, @Param("ynEnum") YnEnum ynEnum, @Param("regDate") LocalDateTime regDate);
 }

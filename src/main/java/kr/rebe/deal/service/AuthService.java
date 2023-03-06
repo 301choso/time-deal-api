@@ -6,10 +6,8 @@ import kr.rebe.deal.enums.YnEnum;
 import kr.rebe.deal.repository.MemberRepository;
 import kr.rebe.deal.repository.SessionRepository;
 import kr.rebe.deal.dto.LoginDto;
-import kr.rebe.deal.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -34,7 +32,7 @@ public class AuthService {
         Member byLoginId = memberRepository.findByLoginId(loginDto.getLoginId());
         if (byLoginId != null && byLoginId.getLeaveYn() == YnEnum.N) {
             if (BCrypt.checkpw(loginDto.getLoginPwd(), byLoginId.getLoginPwd())) {
-                String sessionAuth = setSession(request, byLoginId);
+                String sessionAuth = setSession(byLoginId);
                 setCookie(response, sessionAuth);
                 return true;
             }
@@ -53,7 +51,7 @@ public class AuthService {
     /**
      *  세션 설정
      * */
-    private String setSession(HttpServletRequest request, Member byLoginId) {
+    private String setSession(Member byLoginId) {
         Session session = addSession(byLoginId);
         return session.getAccessToken();
     }
@@ -73,7 +71,8 @@ public class AuthService {
     /**
      * 세션 삭제
      * */
-    public void removeSession(MemberDto memberDto) {
-        sessionRepository.deleteAllByMemberSeq(memberDto.getMemberSeq());
+    @Transactional
+    public void removeSession(Long memberSeq) {
+        sessionRepository.deleteAllByMemberSeq(memberSeq);
     }
 }

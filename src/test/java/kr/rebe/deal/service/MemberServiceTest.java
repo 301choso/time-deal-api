@@ -77,4 +77,17 @@ class MemberServiceTest {
         Assertions.assertFalse(result);
         memberRepository.deleteById(member.getMemberSeq());
     }
+
+    @Test
+    @DisplayName("회원 탈퇴 확인")
+    void leaveMember() {
+        MemberDto memberDto1 = MemberDto.builder()
+                .loginId("member1")
+                .loginPwd("1111")
+                .build();
+        Member member = memberService.joinMember(memberDto1);
+        boolean result = memberService.leaveMember(member.getMemberSeq());
+        Assertions.assertTrue(result);
+        memberRepository.deleteById(member.getMemberSeq());
+    }
 }
