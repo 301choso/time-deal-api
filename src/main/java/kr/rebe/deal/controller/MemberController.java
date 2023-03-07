@@ -1,11 +1,11 @@
 package kr.rebe.deal.controller;
 
+import kr.rebe.deal.common.response.CommonResponse;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.service.MemberService;
 import kr.rebe.deal.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
-public class MemberController {
+public class MemberController extends CommonResponse{
 
     private final MemberService memberService;
     /**
@@ -29,7 +29,7 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<Member> joinMember(@ModelAttribute("memberDto") @Valid MemberDto memberDto) {
         Member member = memberService.joinMember(memberDto);
-        return ResponseEntity.status(HttpStatus.OK).body(member);
+        return createResponseEntity(true, null, member);
     }
 
     /**
@@ -39,7 +39,7 @@ public class MemberController {
     public ResponseEntity<List<MemberDto>> getMemberList() {
         // 세션에서 권한 확인
         List<MemberDto> memberList = memberService.getMemberList();
-        return ResponseEntity.status(HttpStatus.OK).body(memberList);
+        return createResponseEntity(true, null, memberList);
     }
 
     /**
@@ -48,7 +48,7 @@ public class MemberController {
     @GetMapping("/{memberSeq}")
     public ResponseEntity<MemberDto> getMember(@PathVariable Long memberSeq) { // 권한 확인
         MemberDto member = memberService.getMember(memberSeq);
-        return ResponseEntity.status(HttpStatus.OK).body(member);
+        return createResponseEntity(true, null, member);
     }
 
     /**
@@ -56,8 +56,8 @@ public class MemberController {
      * */
     @GetMapping("/idCheck")
     public ResponseEntity checkLoginId(@RequestParam("loginId") String loginId) {
-        boolean result = memberService.checkLoginId(loginId);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        boolean isSuccess = memberService.checkLoginId(loginId);
+        return createResponseEntity(isSuccess);
     }
 
     /**
@@ -65,7 +65,7 @@ public class MemberController {
      * */
     @PatchMapping("/leave/{memberSeq}")
     public ResponseEntity leaveMember(@RequestParam("memberSeq") Long memberSeq) {
-        boolean result = memberService.leaveMember(memberSeq);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        boolean isSuccess = memberService.leaveMember(memberSeq);
+        return createResponseEntity(isSuccess);
     }
 }

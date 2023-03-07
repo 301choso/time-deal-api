@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SpringBootTest
@@ -32,9 +31,6 @@ class AuthServiceTest {
 
     MemberDto memberDto;
     Member mem;
-
-    @Mock
-    HttpServletRequest request;
 
     @Mock
     HttpServletResponse response;
@@ -61,17 +57,18 @@ class AuthServiceTest {
     void test1() {
         loginDto.setLoginId("member1");
         loginDto.setLoginPwd("1234");
-        boolean b = authService.logIn(loginDto, request, response);
+        boolean b = authService.logIn(loginDto, response);
         Assertions.assertEquals(true, b);
     }
 
     @Test
     @DisplayName("로그인 값 체크_실패")
     void test2() {
-        loginDto.setLoginId("member1");
+        loginDto.setLoginId("member");
         loginDto.setLoginPwd("12345");
-        boolean b = authService.logIn(loginDto, request, response);
-        Assertions.assertEquals(false, b);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            authService.logIn(loginDto, response);
+        });
     }
 
     @Test

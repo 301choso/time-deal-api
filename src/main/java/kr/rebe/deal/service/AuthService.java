@@ -1,5 +1,7 @@
 package kr.rebe.deal.service;
 
+import kr.rebe.deal.common.exception.CustomException;
+import kr.rebe.deal.common.exception.ErrorCode;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.enums.YnEnum;
@@ -11,7 +13,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -28,16 +29,15 @@ public class AuthService {
      *  값 체크
      * */
     @Transactional
-    public boolean logIn(LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
+    public boolean logIn(LoginDto loginDto, HttpServletResponse response) {
         Member byLoginId = memberRepository.findByLoginId(loginDto.getLoginId());
-        if (byLoginId != null && byLoginId.getLeaveYn() == YnEnum.N) {
-            if (BCrypt.checkpw(loginDto.getLoginPwd(), byLoginId.getLoginPwd())) {
-                String sessionAuth = setSession(byLoginId);
-                setCookie(response, sessionAuth);
-                return true;
-            }
+        if (byLoginId == null || byLoginId.getLeaveYn() == YnEnum.Y ||
+            !BCrypt.checkpw(loginDto.getLoginPwd(), byLoginId.getLoginPwd())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_MEMBER);
         }
-        return false;
+        String sessionAuth = setSession(byLoginId);
+        setCookie(response, sessionAuth);
+        return true;
     }
 
     /**
