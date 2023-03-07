@@ -67,6 +67,7 @@ public class MemberService {
         if (member == null) {
             return false;
         }
-        return memberRepository.updateLeaveYn(memberSeq, YnEnum.Y, LocalDateTime.now()) > 0 ? true : false;
+        member.updateLeaveYn(YnEnum.Y, LocalDateTime.now());
+        return member.getLeaveYn() == YnEnum.Y ? true : false;
     }
 }

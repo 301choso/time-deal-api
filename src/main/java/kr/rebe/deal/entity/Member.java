@@ -60,4 +60,9 @@ public class Member {
                 .build();
     }
 
+    public void updateLeaveYn(YnEnum leaveYn, LocalDateTime regDate) {
+        this.leaveYn = leaveYn;
+        this.regDate = regDate;
+    }
+
 }

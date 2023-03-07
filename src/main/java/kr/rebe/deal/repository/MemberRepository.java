@@ -22,7 +22,4 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
 
     Member findByLoginId(String loginId);
 
-    @Modifying
-    @Query("Update Member m set m.leaveYn=:ynEnum, m.regDate=:regDate where m.memberSeq=:memberSeq")
-    int updateLeaveYn(Long memberSeq, @Param("ynEnum") YnEnum ynEnum, @Param("regDate") LocalDateTime regDate);
 }
