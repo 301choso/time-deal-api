@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -76,5 +77,23 @@ class AuthServiceTest {
     void test3() {
         Session session = authService.addSession(mem);
         Assertions.assertNotNull(session);
+    }
+
+    @Test
+    @DisplayName("세션 삭제 확인")
+    void test4() {
+        Session session = authService.addSession(mem);
+        authService.removeSession(mem.getMemberSeq());
+        Session sessionInfo = sessionRepository.findById(mem.getMemberSeq()).orElse(null);
+        Assertions.assertNull(sessionInfo);
+    }
+
+    @Test
+    @DisplayName("세션 값이 맞으면 member 값을 준다.")
+    @Transactional
+    void test5() {
+        Session session = authService.addSession(mem);
+        Member member = authService.sessionMember(session.getAccessToken());
+        Assertions.assertEquals(mem.getMemberSeq(), member.getMemberSeq());
     }
 }
