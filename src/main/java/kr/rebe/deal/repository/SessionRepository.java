@@ -1,5 +1,6 @@
 package kr.rebe.deal.repository;
 
+import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,8 @@ import java.util.List;
  * */
 @Repository
 public interface SessionRepository extends CrudRepository<Session, Long> {
-    List<Session> deleteAllByMemberSeq(Long memberSeq);
+    Session findByAccessToken(String accessToken);
+
+    List<Session> deleteAllByMember(Member member);
 
 }

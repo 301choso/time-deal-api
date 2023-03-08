@@ -61,7 +61,7 @@ public class AuthService {
      * */
     protected Session addSession(Member member) {
         Session session = Session.builder()
-                .memberSeq(member.getMemberSeq())
+                .member(member)
                 .accessToken(UUID.randomUUID().toString())
                 .regDate(LocalDateTime.now())
                 .build();
@@ -73,6 +73,16 @@ public class AuthService {
      * */
     @Transactional
     public void removeSession(Long memberSeq) {
-        sessionRepository.deleteAllByMemberSeq(memberSeq);
+        Member member = Member.builder().memberSeq(memberSeq).build();
+        sessionRepository.deleteAllByMember(member);
     }
+
+    /**
+     * 세션 값이 맞으면 로그인 값을 준다.
+     * */
+    public Member sessionMember(String accessToken) {
+        Session session = sessionRepository.findByAccessToken(accessToken);
+        return session.getMember();
+    }
+
 }

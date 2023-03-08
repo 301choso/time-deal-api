@@ -17,10 +17,11 @@ public class Session {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sessionSeq;
 
-    private Long memberSeq;
-
     private String accessToken;
 
     private LocalDateTime regDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_seq")
+    private Member member;
 }
