@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost/deal
-    username: ${database.username}
-    password: ${database.password}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
 server:
   port: 8001
