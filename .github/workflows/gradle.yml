@@ -34,5 +34,5 @@ jobs:
         arguments: build
     - name: set databases.properties
       env:
-        DATABASE.USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE.PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
