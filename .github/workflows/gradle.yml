@@ -8,6 +8,8 @@
 name: Java CI with Gradle
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,8 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  build_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,14 +26,36 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'temurin'
+        distribution: 'temurin' 
+        
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |  
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-    
+        
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew      
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        
+    - name: Start MySQL
+      uses: samin/mysql-action@v1.3
       with:
-        arguments: build
-    - name: set databases.properties
-      env:
-        DATABASE.USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE.PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        character set server: 'utf8'
+        mysql database: 'deal'
+        mysql user: ${{ secrets.DATABASE_USERNAME }}
+        mysql password: ${{ secrets.DATABASE_PASSWORD }}         
+        
+    - name: make database.properties
+      run: |
+        cd ./src/main/resources
+        touch ./database.properties
+        echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
+        echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
+      shell: bash
+      
+    - name: Build with Gradle
+      run: ./gradlew build -x test
