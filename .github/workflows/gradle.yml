@@ -13,8 +13,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
+permissions: write-all
 
 jobs:
   build_test:
@@ -22,11 +21,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'temurin' 
+        distribution: 'temurin'     
+        
+    - name: Set up MySQL
+      uses: samin/mysql-action@v1
+      with:
+        character set server: 'utf8'
+        mysql database: 'deal'
+        mysql user: ${{ secrets.DATABASE_USERNAME }}
+        mysql password: ${{ secrets.DATABASE_PASSWORD }}
         
     - name: Gradle Caching
       uses: actions/cache@v3
@@ -36,18 +44,8 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
-          ${{ runner.os }}-gradle-    
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew      
-        
-    - name: Start MySQL
-      uses: samin/mysql-action@v1
-      with:
-        mysql database: deal
-        mysql user: ${{ secrets.DATABASE_USERNAME }}
-        mysql password: ${{ secrets.DATABASE_PASSWORD }}  
-           
+          ${{ runner.os }}-gradle-            
+      
     - name: set properties 
       run: |
         cd ./src/test/resources
@@ -56,8 +54,16 @@ jobs:
         echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
       shell: bash
       
-    - name: Build with Gradle 
-      run: ./gradlew build -x test
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew   
       
-    - name: Test with Gradle # test application build
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: build
+  
+    - name: Build with Gradle 
+      run: ./gradlew build
+      
+    - name: Test with Gradle
       run: ./gradlew test
