@@ -57,5 +57,8 @@ jobs:
         echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
       shell: bash
       
-    - name: Build with Gradle
+    - name: Build with Gradle # 실제 application build
       run: ./gradlew build -x test
+    
+    - name: Test with Gradle # test application build
+      run: ./gradlew test
