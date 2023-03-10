@@ -42,20 +42,15 @@ jobs:
       run: chmod +x ./gradlew      
         
     - name: Start MySQL
-      uses: samin/mysql-action@v1.3
+      uses: samin/mysql-action@v1
       with:
-        host port: 3306
-        container port: 3306
-        mysql database: 'deal'
+        mysql database: deal
         mysql user: ${{ secrets.DATABASE_USERNAME }}
         mysql password: ${{ secrets.DATABASE_PASSWORD }}  
            
     - name: set properties 
       run: |
-        mkdir ./src/test/resources
         cd ./src/test/resources
-        touch ./application.yml
-        echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.yml
         touch ./database.properties
         echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
         echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
