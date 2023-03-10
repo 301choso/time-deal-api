@@ -52,6 +52,7 @@ jobs:
            
     - name: set properties 
       run: |
+        mkdir ./src/test/resources
         cd ./src/test/resources
         touch ./application.yml
         echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.yml
