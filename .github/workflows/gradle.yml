@@ -42,9 +42,9 @@ jobs:
       run: chmod +x ./gradlew      
         
     - name: Start MySQL
-      uses: samin/mysql-action@v1.3
+      uses: samin/mysql-action@v1
       with:
-        mysql database: 'deal'
+        mysql database: deal
         mysql user: ${{ secrets.DATABASE_USERNAME }}
         mysql password: ${{ secrets.DATABASE_PASSWORD }}  
            
