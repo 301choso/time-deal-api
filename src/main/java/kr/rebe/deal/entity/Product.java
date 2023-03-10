@@ -46,6 +46,9 @@ public class Product {
         this.regDate = regDate;
     }
 
+    public void decreaseStock() {
+        this.stock -= 1;
+    }
     public ProductDto toDto() {
         return ProductDto.builder()
                 .productSeq(productSeq)
