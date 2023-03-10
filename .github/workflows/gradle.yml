@@ -48,22 +48,13 @@ jobs:
         mysql database: 'deal'
         mysql user: ${{ secrets.DATABASE_USERNAME }}
         mysql password: ${{ secrets.DATABASE_PASSWORD }}  
-        
-    # 실제 application    
-    - name: make database.properties 
+           
+    - name: set properties 
       run: |
         cd ./src/main/resources
         touch ./database.properties
         echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
         echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
-      shell: bash
-      
-    - name: Build with Gradle 
-      run: ./gradlew build -x test
-      
-    # test application  
-    - name: make database.properties 
-      run: |
         cp application.yml application.yml2
         cp database.properties database.properties2
         cd ../../..
@@ -71,6 +62,9 @@ jobs:
         mv ./src/main/resources/application.yml2 ./src/test/resources/application.yml
         mv ./src/main/resources/database.properties2 ./src/test/resources/database.properties
       shell: bash
+      
+    - name: Build with Gradle 
+      run: ./gradlew build -x test
       
     - name: Test with Gradle # test application build
       run: ./gradlew test
