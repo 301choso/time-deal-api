@@ -44,7 +44,8 @@ jobs:
     - name: Start MySQL
       uses: samin/mysql-action@v1.3
       with:
-        character set server: 'utf8'
+        host port: 3306
+        container port: 3306
         mysql database: 'deal'
         mysql user: ${{ secrets.DATABASE_USERNAME }}
         mysql password: ${{ secrets.DATABASE_PASSWORD }}  
