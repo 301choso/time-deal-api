@@ -1,5 +1,6 @@
 package kr.rebe.deal.entity;
 
+import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.enums.LogInTypeEnum;
 import kr.rebe.deal.enums.YnEnum;
@@ -65,4 +66,12 @@ public class Member {
         this.regDate = regDate;
     }
 
+    public AuthDto getAuthInfo() {
+        return AuthDto.builder()
+                .memberSeq(memberSeq)
+                .memberName(memberName)
+                .loginType(loginType)
+                .loginId(loginId)
+                .build();
+    }
 }

@@ -22,6 +22,6 @@ public class Session {
     private LocalDateTime regDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_seq")
+    @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
 }
