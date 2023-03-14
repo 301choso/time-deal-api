@@ -92,5 +92,5 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          rm -rf /home/deal/build
+          sh /home/script/stop.sh
           sh /home/script/run.sh
