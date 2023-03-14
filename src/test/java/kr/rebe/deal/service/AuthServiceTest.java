@@ -1,5 +1,6 @@
 package kr.rebe.deal.service;
 
+import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.dto.LoginDto;
 import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.entity.Member;
@@ -93,7 +94,7 @@ class AuthServiceTest {
     @Transactional
     void test5() {
         Session session = authService.addSession(mem);
-        Member member = authService.sessionMember(session.getAccessToken());
-        Assertions.assertEquals(mem.getMemberSeq(), member.getMemberSeq());
+        AuthDto authDto = authService.sessionMember(session.getAccessToken());
+        Assertions.assertEquals(mem.getMemberSeq(), authDto.getMemberSeq());
     }
 }

@@ -2,6 +2,7 @@ package kr.rebe.deal.service;
 
 import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
+import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.dto.OrdersDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Orders;
@@ -53,6 +54,17 @@ public class OrderService {
                 .build();
         orderRepository.findAllByMember(member).forEach(o-> ordersList.add(o.toDto()));
         return ordersList;
+    }
+
+    /**
+     * 상품별 구매한 회원 목록 조회
+     * */
+    public List<MemberDto> getMemberListByProduct(Long productSeq) {
+        List<MemberDto> memberList = new ArrayList<>();
+        Product product = Product.builder().productSeq(productSeq).build();
+        List<Orders> allByProduct = orderRepository.findAllByProduct(product);
+        allByProduct.forEach(p -> memberList.add(p.getMember().toDto()));
+        return memberList;
     }
 
     /**

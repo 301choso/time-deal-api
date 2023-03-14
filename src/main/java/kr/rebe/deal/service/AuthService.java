@@ -2,6 +2,8 @@ package kr.rebe.deal.service;
 
 import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
+import kr.rebe.deal.common.util.CookieUtil;
+import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.enums.YnEnum;
@@ -12,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -36,16 +37,8 @@ public class AuthService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_MEMBER);
         }
         String sessionAuth = setSession(byLoginId);
-        setCookie(response, sessionAuth);
+        CookieUtil.setCookie(response, sessionAuth);
         return true;
-    }
-
-    /**
-     *  쿠키 설정
-     * */
-    private static void setCookie(HttpServletResponse response, String sessionAuth) {
-        Cookie cookie = new Cookie("sessionAuth", sessionAuth);
-        response.addCookie(cookie);
     }
 
     /**
@@ -80,9 +73,10 @@ public class AuthService {
     /**
      * 세션 값이 맞으면 로그인 값을 준다.
      * */
-    public Member sessionMember(String accessToken) {
-        Session session = sessionRepository.findByAccessToken(accessToken);
-        return session.getMember();
+    public AuthDto sessionMember(String accessToken) {
+        Session byAccessToken = sessionRepository.findByAccessToken(accessToken);
+        Member member = byAccessToken.getMember();
+        return member.getAuthInfo();
     }
 
 }
