@@ -49,7 +49,12 @@ jobs:
       
     - name: set properties 
       run: |
-        cd ./src/test/resources
+        cd ./src/main/resources
+        touch ./database.properties
+        echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
+        echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
+        cd ../..
+        cd test/resources
         touch ./database.properties
         echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
         echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
@@ -63,3 +68,29 @@ jobs:
       
     - name: Test with Gradle
       run: ./gradlew test
+   
+    - uses: actions/upload-artifact@v3
+      with:
+        name: time-deal-api
+        path: build/libs
+        
+    - name: Deliver build file
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        source: "build/libs/deal-0.0.1-SNAPSHOT.jar"
+        target: "/home/deal"
+
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          rm -rf /home/deal/build
+          sh /home/script/run.sh
