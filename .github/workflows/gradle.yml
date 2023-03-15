@@ -19,6 +19,31 @@ permissions:
 jobs:
   build_test:
     runs-on: ubuntu-latest
+    container: openjdk:11
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_DATABASE: deal
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306
+
+      redis:
+        image: redis:latest
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379/tcp
 
     steps:
       - uses: actions/checkout@v3
@@ -37,7 +62,10 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-   
+            ${{ runner.os }}-gradle-    
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
 
       - name: Start MySQL
         uses: samin/mysql-action@v1
@@ -50,6 +78,9 @@ jobs:
         uses: supercharge/redis-github-action@1.5.0
         with:
           redis-version: 'latest'
+        env:
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
 
       - name: set properties
         run: |
@@ -98,3 +129,4 @@ jobs:
           script: |
             sh /home/script/stop.sh
             sh /home/script/run.sh
+
