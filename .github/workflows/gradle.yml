@@ -35,85 +35,68 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'     
-        
-    - name: Gradle Caching
-      uses: actions/cache@v3
-      with:
-        path: |  
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-    
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew      
-        
-    - name: Start MySQL
-      uses: samin/mysql-action@v1
-      with:
-        mysql database: deal
-        mysql user: ${{ secrets.DATABASE_USERNAME }}
-        mysql password: ${{ secrets.DATABASE_PASSWORD }}
+      - uses: actions/checkout@v3
 
-    - name: Start Redis
-      uses: supercharge/redis-github-action@1.5.0
-      with:
-        redis-version: 'latest'
-      env:
-        REDIS_HOST: localhost
-        REDIS_PORT: 6379
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
 
-    - name: set properties 
-      run: |
-        cd ./src/main/resources
-        touch ./database.properties
-        echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
-        echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
-        cd ../..
-        cd test/resources
-        touch ./database.properties
-        echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
-        echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
-      shell: bash
-      
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew   
-    
-    - name: Build with Gradle 
-      run: ./gradlew build -x test
-      
-    - name: Test with Gradle
-      run: ./gradlew test
-   
-    - uses: actions/upload-artifact@v3
-      with:
-        name: time-deal-api
-        path: build/libs
-        
-    - name: Deliver build file
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        source: "build/libs/deal-0.0.1-SNAPSHOT.jar"
-        target: "/home/deal"
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-            
 
-    - name: Deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        script: |
-          sh /home/script/stop.sh
-          sh /home/script/run.sh
+      - name: set properties
+        run: |
+          cd ./src/main/resources
+          touch ./database.properties
+          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
+          cd ../..
+          cd test/resources
+          touch ./database.properties
+          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
+        shell: bash
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Test with Gradle
+        run: ./gradlew test
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: time-deal-api
+          path: build/libs
+
+      - name: Deliver build file
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          source: "build/libs/deal-0.0.1-SNAPSHOT.jar"
+          target: "/home/deal"
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            sh /home/script/stop.sh
+            sh /home/script/run.sh
