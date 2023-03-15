@@ -18,7 +18,7 @@ public class Orders {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderSeq;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 

@@ -1,6 +1,7 @@
 package kr.rebe.deal.controller;
 
 import kr.rebe.deal.common.response.CommonResponse;
+import kr.rebe.deal.common.util.AuthUtil;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.service.MemberService;
 import kr.rebe.deal.dto.MemberDto;
@@ -37,7 +38,7 @@ public class MemberController extends CommonResponse{
      * */
     @GetMapping()
     public ResponseEntity<List<MemberDto>> getMemberList() {
-        // 세션에서 권한 확인
+        AuthUtil.isAdmin();
         List<MemberDto> memberList = memberService.getMemberList();
         return createResponseEntity(true, null, memberList);
     }
@@ -46,7 +47,8 @@ public class MemberController extends CommonResponse{
      * 회원 단일 조회
      * */
     @GetMapping("/{memberSeq}")
-    public ResponseEntity<MemberDto> getMember(@PathVariable Long memberSeq) { // 권한 확인
+    public ResponseEntity<MemberDto> getMember(@PathVariable Long memberSeq) {
+        AuthUtil.isAdminOrMember(memberSeq);
         MemberDto member = memberService.getMember(memberSeq);
         return createResponseEntity(true, null, member);
     }
@@ -65,6 +67,7 @@ public class MemberController extends CommonResponse{
      * */
     @PatchMapping("/leave/{memberSeq}")
     public ResponseEntity leaveMember(@RequestParam("memberSeq") Long memberSeq) {
+        AuthUtil.isAdminOrMember(memberSeq);
         boolean isSuccess = memberService.leaveMember(memberSeq);
         return createResponseEntity(isSuccess);
     }

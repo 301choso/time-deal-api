@@ -15,5 +15,6 @@ spring:
       hibernate:
         show_sql: true
     database: mysql
+
 server:
   port: 8001

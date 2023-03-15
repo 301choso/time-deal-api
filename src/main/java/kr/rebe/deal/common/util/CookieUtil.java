@@ -1,16 +1,15 @@
 package kr.rebe.deal.common.util;
 
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
 
-    public static Cookie getCookie(String cookieName) {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = attr.getRequest();
+    /**
+     * 쿠키 조회
+     * */
+    public static Cookie getCookie(HttpServletRequest request, String cookieName) {
         final Cookie[] cookies = request.getCookies();
         if (cookies == null) return null;
         for (Cookie cookie : cookies) {
@@ -18,5 +17,13 @@ public class CookieUtil {
                 return cookie;
         }
         return null;
+    }
+
+    /**
+     *  쿠키 설정
+     * */
+    public static void setCookie(HttpServletResponse response, String sessionAuth) {
+        Cookie cookie = new Cookie("sessionAuth", sessionAuth);
+        response.addCookie(cookie);
     }
 }

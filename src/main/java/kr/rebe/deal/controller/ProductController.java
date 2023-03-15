@@ -1,6 +1,7 @@
 package kr.rebe.deal.controller;
 
 import kr.rebe.deal.common.response.CommonResponse;
+import kr.rebe.deal.common.util.AuthUtil;
 import kr.rebe.deal.dto.ProductDto;
 import kr.rebe.deal.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class ProductController extends CommonResponse {
      * */
     @PostMapping
     public ResponseEntity<ProductDto> saveProduct(@ModelAttribute("productDto") ProductDto productDto) {
-        // 관리자 권한 체크
+        AuthUtil.isAdmin();
         ProductDto saveProduct = productService.saveProduct(productDto);
         return createResponseEntity(true, null, saveProduct);
     }
@@ -55,7 +56,7 @@ public class ProductController extends CommonResponse {
      * */
     @PostMapping("/{productSeq}")
     public ResponseEntity<ProductDto> updateProduct(@ModelAttribute("productDto") ProductDto productDto) {
-        // 관리자 권한 체크
+        AuthUtil.isAdmin();
         ProductDto saveProduct = productService.updateProduct(productDto);
         return createResponseEntity(true, null, saveProduct);
     }
@@ -64,7 +65,7 @@ public class ProductController extends CommonResponse {
      * */
     @DeleteMapping("/{productSeq}")
     public ResponseEntity<ProductDto> deleteProduct(@PathVariable("productSeq") Long productSeq) {
-        // 관리자 권한 체크
+        AuthUtil.isAdmin();
         boolean isSuccess = productService.deleteProduct(productSeq);
         return createResponseEntity(isSuccess, null);
     }
