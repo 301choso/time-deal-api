@@ -1,8 +1,7 @@
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/deal?useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/deal
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
   # swagger
@@ -19,7 +18,8 @@ spring:
       hibernate:
         show_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database: mysql
+
 server:
   port: 8001
