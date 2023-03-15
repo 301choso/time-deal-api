@@ -27,7 +27,7 @@ jobs:
           MYSQL_DATABASE: deal
           MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       redis:
-        image: redis
+        image: redis:latest
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
@@ -67,7 +67,7 @@ jobs:
     - name: Start Redis
       uses: supercharge/redis-github-action@1.5.0
       with:
-        redis-version: '6.x'
+        redis-version: 'latest'
 
     - name: set properties 
       run: |
