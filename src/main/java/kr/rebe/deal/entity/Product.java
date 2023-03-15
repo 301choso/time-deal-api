@@ -46,10 +46,6 @@ public class Product {
         this.regDate = regDate;
     }
 
-    public void decreaseStock() {
-        this.stock -= 1;
-    }
-    
     public ProductDto toDto() {
         return ProductDto.builder()
                 .productSeq(productSeq)
@@ -61,5 +57,20 @@ public class Product {
                 .endDate(endDate)
                 .regDate(LocalDateTime.now())
                 .build();
+    }
+
+    public void decreaseStock() {
+        this.stock -= 1;
+    }
+    public boolean isSaleTime() {
+        if (LocalDateTime.now().isAfter(this.startDate) &&
+                LocalDateTime.now().isBefore(this.endDate)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean haveStock() {
+       return this.stock > 0 ? true : false;
     }
 }

@@ -1,5 +1,6 @@
 package kr.rebe.deal.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Orders;
 import kr.rebe.deal.entity.Product;
@@ -13,8 +14,10 @@ public class OrdersDto {
 
     private Long orderSeq;
 
+    @JsonIgnore
     private Product product;
 
+    @JsonIgnore
     private Member member;
 
     private Long price;
