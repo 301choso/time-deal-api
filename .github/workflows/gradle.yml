@@ -35,7 +35,7 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-          -
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
