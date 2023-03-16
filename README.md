@@ -37,8 +37,8 @@
 
 ## API 명세서 (Swagger)
 <p>
-  <img src="https://user-images.githubusercontent.com/78252188/225615550-027f74d2-c807-4378-97bd-3ee49ef35159.png" height="300" width ="50%" align="left">
-  <img src="https://user-images.githubusercontent.com/78252188/225624381-05781925-b315-467a-b20e-8b05ea4d0c39.png" height="300" width ="50%" align="right">
+  <img src="https://user-images.githubusercontent.com/78252188/225615550-027f74d2-c807-4378-97bd-3ee49ef35159.png" height="300" width ="50%" align="center">
+  <img src="https://user-images.githubusercontent.com/78252188/225624381-05781925-b315-467a-b20e-8b05ea4d0c39.png" height="300" width ="50%" align="center">
 </p>
 
 
