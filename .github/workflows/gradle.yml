@@ -23,12 +23,12 @@ jobs:
     container: openjdk:11
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:latest
         env:
           MYSQL_DATABASE: deal
           MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       redis:
-        image: redis
+        image: redis:latest
         env:
           REDIS_HOST: localhost
           REDIS_PORT: 6379
@@ -67,6 +67,13 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Start MySQL
+        uses: samin/mysql-action@v1
+        with:
+          mysql database: deal
+          mysql user: ${{ secrets.DATABASE_USERNAME }}
+          mysql password: ${{ secrets.DATABASE_PASSWORD }}
 
       - name: Build with Gradle
         run: ./gradlew build -x test
