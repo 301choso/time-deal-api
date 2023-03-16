@@ -23,7 +23,7 @@ jobs:
     container: openjdk:11
     services:
       mysql:
-        image: mysql:latest
+        image: mysql:5.7
         env:
           MYSQL_DATABASE: deal
           MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
