@@ -10,12 +10,16 @@ import kr.rebe.deal.entity.Product;
 import kr.rebe.deal.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 구매 Service
@@ -26,6 +30,9 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+
+    private final ProductService productService;
+    private final RedissonClient redissonClient;
 
     /**
      * 구매 전체 목록 조회
@@ -60,11 +67,11 @@ public class OrderService {
      * 상품별 구매한 회원 목록 조회
      * */
     public List<MemberDto> getMemberListByProduct(Long productSeq) {
-        List<MemberDto> memberList = new ArrayList<>();
+        Set<MemberDto> memberList = new HashSet<>();
         Product product = Product.builder().productSeq(productSeq).build();
         List<Orders> allByProduct = orderRepository.findAllByProduct(product);
         allByProduct.forEach(p -> memberList.add(p.getMember().toDto()));
-        return memberList;
+        return new ArrayList<>(memberList);
     }
 
     /**
@@ -72,27 +79,45 @@ public class OrderService {
      */
     @Transactional
     public OrdersDto doOrder(OrdersDto ordersDto) {
-        // 제품이 존재하는지
-        Product product = ordersDto.getProduct();
-        if (product == null) {
-            throw new CustomException(ErrorCode.NOT_EXIST_PRODUCT);
+        RLock lock = redissonClient.getLock("order");
+
+        try {
+            boolean isLocked = lock.tryLock(2,3, TimeUnit.SECONDS);
+            if (!isLocked) {
+                throw new CustomException(ErrorCode.FAILED_GET_LOCK);
+            }
+
+            Product product = ordersDto.getProduct();
+            validation(product);
+
+            product.decreaseStock();
+            productService.saveProduct(product.toDto());
+            Orders saved = orderRepository.save(ordersDto.toEntity());
+
+            return saved.toDto();
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            lock.unlock();
         }
-        // 구매 가능한 시간인지?
-        if (!LocalDateTime.now().isAfter(product.getStartDate()) ||
-            !LocalDateTime.now().isBefore(product.getEndDate())) {
+
+        return null;
+    }
+
+    /**
+     * 구매하기 전 검증
+     */
+    protected boolean validation(Product product) {
+        if (product == null) {
+            throw new NullPointerException();
+        }
+        if (!product.isSaleTime()) {
             throw new CustomException(ErrorCode.NOT_SALE_TIME);
         }
-        // 재고가 있는지?
-        if (product.getStock() <= 0) {
+        if (!product.haveStock()) {
             throw new CustomException(ErrorCode.OUT_OF_STOCK);
         }
-
-        // 있으면 저장
-        Orders saved = orderRepository.save(ordersDto.toEntity());
-
-        //재고 차감
-        product.decreaseStock();
-
-        return saved.toDto();
+        return true;
     }
 }

@@ -1,5 +1,6 @@
 package kr.rebe.deal.service;
 
+import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.dto.OrdersDto;
 import kr.rebe.deal.dto.ProductDto;
@@ -16,6 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,7 +58,7 @@ class OrderServiceTest {
                 .productName("제품명")
                 .price(1000L)
                 .discount(10L)
-                .stock(10L)
+                .stock(100L)
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
                 .regDate(LocalDateTime.now().minusDays(1))
@@ -123,7 +127,80 @@ class OrderServiceTest {
                 .regDate(LocalDateTime.now())
                 .build();
         OrdersDto ordersDto1 = orderService.doOrder(ordersDto);
-        Assertions.assertEquals(ordersDto1.getProduct().getStock(), 9L);
+        Assertions.assertEquals(99L, productService.getProduct(productSeq).getStock());
         orderRepository.deleteById(ordersDto1.getOrderSeq());
+    }
+
+    @Test
+    @DisplayName("동시에_100개 구매하기")
+    void doOrder2() throws InterruptedException {
+        int threadCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        CountDownLatch latch = new CountDownLatch(threadCount); //100개 끝날때까지 기다리도록 기다림
+
+        ordersDto = OrdersDto.builder()
+                .product(product)
+                .member(member)
+                .price(prodcutDto.getPrice())
+                .method(MethodEnum.CARD)
+                .orderDate(LocalDateTime.now())
+                .regDate(LocalDateTime.now())
+                .build();
+
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    OrdersDto ordersDto1 = orderService.doOrder(ordersDto);
+                    orderRepository.deleteById(ordersDto1.getOrderSeq());
+                } finally {
+                    latch.countDown();
+                }
+
+            });
+
+        }
+        latch.await();
+
+        ProductDto product1 = productService.getProduct(productSeq);
+
+        assertEquals(0, product1.getStock());
+    }
+
+    @Test
+    @DisplayName("구매하기 전 검증")
+    void validation() {
+        // 성공
+        boolean result1 = orderService.validation(product);
+        Assertions.assertTrue(result1);
+
+        // 실패
+        Assertions.assertThrows(NullPointerException.class,()->{
+            orderService.validation(null);
+        });
+
+        Product product3 = Product.builder()
+                .productName("제품3")
+                .price(1000L)
+                .discount(10L)
+                .stock(0L)
+                .startDate(LocalDateTime.now().minusDays(1))
+                .endDate(LocalDateTime.now().plusDays(1))
+                .build();
+        Assertions.assertThrows(CustomException.class,()->{
+            orderService.validation(product3);
+        });
+
+        Product product4 = Product.builder()
+                .productName("제품4")
+                .price(1000L)
+                .discount(10L)
+                .stock(0L)
+                .startDate(LocalDateTime.now().minusDays(1))
+                .endDate(LocalDateTime.now().plusDays(1))
+                .regDate(LocalDateTime.now().minusDays(1))
+                .build();
+        Assertions.assertThrows(CustomException.class,()->{
+            orderService.validation(product4);
+        });
     }
 }
