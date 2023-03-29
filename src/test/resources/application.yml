@@ -1,25 +1,19 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/deal
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-  # swagger
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+    hikari:
+      jdbc-url: jdbc:h2:./data/test;MODE=MYSQL
+      driver-class-name: org.h2.Driver
+      username: sa
+      initialization-mode: always
   # Redis
   redis:
-    host: localhost
+    host: redis
     port: 6379
-
   jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
     properties:
       hibernate:
-        show_sql: true
-    hibernate:
-      ddl-auto: create
-    database: mysql
-
-server:
-  port: 8001
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
