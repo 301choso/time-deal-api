@@ -30,21 +30,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-   
 
-      - name: set properties
-        run: |
-          cd ./src/main/resources
-          touch ./database.properties
-          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
-          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
-          cd ../..
-          cd test/resources
-          touch ./database.properties
-          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ./database.properties
-          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ./database.properties
-        shell: bash
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.5.0
+        with:
+          redis-version: 'latest'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build -x test
+      - name: test with Gradle
+        run: ./gradlew

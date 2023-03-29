@@ -39,3 +39,6 @@ out/
 
 ### pw config ###
 database.properties
+
+### test data ###
+/data
