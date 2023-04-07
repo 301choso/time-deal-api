@@ -14,6 +14,7 @@ public enum ErrorCode {
     NOT_EXIST_PRODUCT(HttpStatus.NOT_FOUND, "제품이 존재하지 않습니다."),
     NOT_SALE_TIME(HttpStatus.NOT_FOUND, "구매 가능한 시간이 아닙니다."),
     OUT_OF_STOCK(HttpStatus.NOT_FOUND, "구매 가능한 수량이 없습니다."),
+    FAILED_SALE(HttpStatus.NOT_FOUND, "구매가 실패하였습니다."),
     FAILED_GET_LOCK(HttpStatus.CONFLICT, "락 획득에 실패했습니다.");
 
     private final HttpStatus httpStatus;

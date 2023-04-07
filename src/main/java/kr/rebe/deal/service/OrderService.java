@@ -102,7 +102,7 @@ public class OrderService {
             lock.unlock();
         }
 
-        return null;
+        throw new CustomException(ErrorCode.FAILED_SALE);
     }
 
     /**
@@ -110,7 +110,7 @@ public class OrderService {
      */
     protected boolean validation(Product product) {
         if (product == null) {
-            throw new NullPointerException();
+            throw new CustomException(ErrorCode.NOT_EXIST_PRODUCT);
         }
         if (!product.isSaleTime()) {
             throw new CustomException(ErrorCode.NOT_SALE_TIME);

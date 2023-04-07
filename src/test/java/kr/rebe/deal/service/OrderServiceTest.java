@@ -174,7 +174,7 @@ class OrderServiceTest {
         Assertions.assertTrue(result1);
 
         // 실패
-        Assertions.assertThrows(NullPointerException.class,()->{
+        Assertions.assertThrows(CustomException.class,()->{
             orderService.validation(null);
         });
 
