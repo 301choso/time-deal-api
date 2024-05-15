@@ -25,5 +25,11 @@ spring:
       ddl-auto: update
     database: mysql
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+
 server:
   port: 8001

@@ -1,5 +1,6 @@
 package kr.rebe.deal.controller;
 
+import io.micrometer.core.annotation.Timed;
 import kr.rebe.deal.common.aop.AdminCheck;
 import kr.rebe.deal.common.aop.MemberOrAdminCheck;
 import kr.rebe.deal.common.response.CommonResponse;
@@ -58,6 +59,7 @@ public class MemberController extends CommonResponse{
      * 아이디 중복 확인
      * */
     @GetMapping("/idCheck")
+    @Timed(value = "idCheck", longTask = true)
     public ResponseEntity checkLoginId(@RequestParam("loginId") String loginId) {
         boolean isSuccess = memberService.checkLoginId(loginId);
         return createResponseEntity(isSuccess);
