@@ -4,7 +4,7 @@ import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
 import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.enums.LogInTypeEnum;
-import kr.rebe.deal.service.AuthService;
+import kr.rebe.deal.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;

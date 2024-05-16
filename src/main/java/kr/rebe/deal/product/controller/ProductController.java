@@ -1,9 +1,9 @@
-package kr.rebe.deal.controller;
+package kr.rebe.deal.product.controller;
 
 import kr.rebe.deal.common.aop.AdminCheck;
 import kr.rebe.deal.common.response.CommonResponse;
 import kr.rebe.deal.dto.ProductDto;
-import kr.rebe.deal.service.ProductService;
+import kr.rebe.deal.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

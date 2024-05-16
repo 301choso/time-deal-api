@@ -1,4 +1,4 @@
-package kr.rebe.deal.service;
+package kr.rebe.deal.auth;
 
 import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
@@ -7,8 +7,8 @@ import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
 import kr.rebe.deal.enums.YnEnum;
-import kr.rebe.deal.repository.MemberRepository;
-import kr.rebe.deal.repository.SessionRepository;
+import kr.rebe.deal.member.repository.MemberRepository;
+import kr.rebe.deal.session.repository.SessionRepository;
 import kr.rebe.deal.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
@@ -52,7 +52,7 @@ public class AuthService {
     /**
      * 세션 생성
      * */
-    protected Session addSession(Member member) {
+    public Session addSession(Member member) {
         Session session = Session.builder()
                 .member(member)
                 .accessToken(UUID.randomUUID().toString())

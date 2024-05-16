@@ -1,4 +1,4 @@
-package kr.rebe.deal.repository;
+package kr.rebe.deal.product.repository;
 
 import kr.rebe.deal.entity.Product;
 import org.springframework.data.repository.CrudRepository;

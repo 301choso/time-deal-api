@@ -1,11 +1,11 @@
-package kr.rebe.deal.controller;
+package kr.rebe.deal.order.controller;
 
 import kr.rebe.deal.common.aop.AdminCheck;
 import kr.rebe.deal.common.aop.MemberOrAdminCheck;
 import kr.rebe.deal.common.response.CommonResponse;
 import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.dto.OrdersDto;
-import kr.rebe.deal.service.OrderService;
+import kr.rebe.deal.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class OrderController extends CommonResponse {
     /**
      * 구매 번호로 단일 조회
      */
-    @GetMapping("/order/{orderSeq}")
+    @GetMapping("/{orderSeq}")
     public ResponseEntity<OrdersDto> getOrders(@PathVariable("orderSeq") Long orderSeq) {
         OrdersDto orders = orderService.getOrders(orderSeq);
         return createResponseEntity(true, null, orders);

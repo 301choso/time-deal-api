@@ -1,11 +1,11 @@
-package kr.rebe.deal.controller;
+package kr.rebe.deal.member.controller;
 
 import io.micrometer.core.annotation.Timed;
 import kr.rebe.deal.common.aop.AdminCheck;
 import kr.rebe.deal.common.aop.MemberOrAdminCheck;
 import kr.rebe.deal.common.response.CommonResponse;
 import kr.rebe.deal.entity.Member;
-import kr.rebe.deal.service.MemberService;
+import kr.rebe.deal.member.service.MemberService;
 import kr.rebe.deal.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

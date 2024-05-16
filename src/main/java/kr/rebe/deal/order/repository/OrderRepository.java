@@ -1,4 +1,4 @@
-package kr.rebe.deal.repository;
+package kr.rebe.deal.order.repository;
 
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Orders;

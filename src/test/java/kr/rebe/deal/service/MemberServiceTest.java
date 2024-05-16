@@ -2,7 +2,8 @@ package kr.rebe.deal.service;
 
 import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.entity.Member;
-import kr.rebe.deal.repository.MemberRepository;
+import kr.rebe.deal.member.service.MemberService;
+import kr.rebe.deal.member.repository.MemberRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class MemberServiceTest {
 
