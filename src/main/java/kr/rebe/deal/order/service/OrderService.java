@@ -1,4 +1,4 @@
-package kr.rebe.deal.service;
+package kr.rebe.deal.order.service;
 
 import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
@@ -7,7 +7,8 @@ import kr.rebe.deal.dto.OrdersDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Orders;
 import kr.rebe.deal.entity.Product;
-import kr.rebe.deal.repository.OrderRepository;
+import kr.rebe.deal.order.repository.OrderRepository;
+import kr.rebe.deal.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -102,15 +103,15 @@ public class OrderService {
             lock.unlock();
         }
 
-        return null;
+        throw new CustomException(ErrorCode.FAILED_SALE);
     }
 
     /**
      * 구매하기 전 검증
      */
-    protected boolean validation(Product product) {
+    public boolean validation(Product product) {
         if (product == null) {
-            throw new NullPointerException();
+            throw new CustomException(ErrorCode.NOT_EXIST_PRODUCT);
         }
         if (!product.isSaleTime()) {
             throw new CustomException(ErrorCode.NOT_SALE_TIME);

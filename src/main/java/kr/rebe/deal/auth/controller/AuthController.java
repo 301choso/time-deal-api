@@ -1,7 +1,7 @@
-package kr.rebe.deal.controller;
+package kr.rebe.deal.auth.controller;
 
 import kr.rebe.deal.common.response.CommonResponse;
-import kr.rebe.deal.service.AuthService;
+import kr.rebe.deal.auth.AuthService;
 import kr.rebe.deal.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

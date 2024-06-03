@@ -9,8 +9,11 @@ import kr.rebe.deal.entity.Orders;
 import kr.rebe.deal.entity.Product;
 import kr.rebe.deal.enums.LogInTypeEnum;
 import kr.rebe.deal.enums.MethodEnum;
-import kr.rebe.deal.repository.MemberRepository;
-import kr.rebe.deal.repository.OrderRepository;
+import kr.rebe.deal.member.service.MemberService;
+import kr.rebe.deal.member.repository.MemberRepository;
+import kr.rebe.deal.order.service.OrderService;
+import kr.rebe.deal.product.service.ProductService;
+import kr.rebe.deal.order.repository.OrderRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -174,7 +177,7 @@ class OrderServiceTest {
         Assertions.assertTrue(result1);
 
         // 실패
-        Assertions.assertThrows(NullPointerException.class,()->{
+        Assertions.assertThrows(CustomException.class,()->{
             orderService.validation(null);
         });
 

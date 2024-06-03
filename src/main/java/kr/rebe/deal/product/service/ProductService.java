@@ -1,10 +1,10 @@
-package kr.rebe.deal.service;
+package kr.rebe.deal.product.service;
 
 import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
 import kr.rebe.deal.dto.ProductDto;
 import kr.rebe.deal.entity.Product;
-import kr.rebe.deal.repository.ProductRepository;
+import kr.rebe.deal.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,14 @@
 package kr.rebe.deal.service;
 
+import kr.rebe.deal.auth.AuthService;
 import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.dto.LoginDto;
 import kr.rebe.deal.dto.MemberDto;
 import kr.rebe.deal.entity.Member;
 import kr.rebe.deal.entity.Session;
-import kr.rebe.deal.repository.MemberRepository;
-import kr.rebe.deal.repository.SessionRepository;
+import kr.rebe.deal.member.service.MemberService;
+import kr.rebe.deal.member.repository.MemberRepository;
+import kr.rebe.deal.session.repository.SessionRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;

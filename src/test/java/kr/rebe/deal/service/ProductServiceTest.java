@@ -2,15 +2,14 @@ package kr.rebe.deal.service;
 
 import kr.rebe.deal.dto.ProductDto;
 import kr.rebe.deal.entity.Product;
-import kr.rebe.deal.repository.ProductRepository;
+import kr.rebe.deal.product.service.ProductService;
+import kr.rebe.deal.product.repository.ProductRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProductServiceTest {

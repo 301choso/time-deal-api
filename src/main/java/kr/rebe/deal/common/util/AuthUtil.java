@@ -4,19 +4,26 @@ import kr.rebe.deal.common.exception.CustomException;
 import kr.rebe.deal.common.exception.ErrorCode;
 import kr.rebe.deal.dto.AuthDto;
 import kr.rebe.deal.enums.LogInTypeEnum;
-import kr.rebe.deal.service.AuthService;
+import kr.rebe.deal.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 /**
  * 인증 정보 Util
  */
+@Aspect
+@Component
+@SuppressWarnings("unchecked")
 @Slf4j
 @RequiredArgsConstructor
 public class AuthUtil {
@@ -25,11 +32,11 @@ public class AuthUtil {
      * 인증 정보 조회
      */
     public static AuthDto getAuth() {
-        Cookie cookie = CookieUtil.getCookie(getRequest(), "sessionAuth");
+        Optional<Cookie> cookie = CookieUtil.getCookie(getRequest(), "sessionAuth");
         if (cookie == null) {
-            return null;
+            throw new CustomException(ErrorCode.UNAUTHORIZED_MEMBER);
         }
-        String value = cookie.getValue();
+        String value = cookie.get().getValue();
         AuthDto authDto = getAuthService().sessionMember(value);
         return authDto;
     }
@@ -46,7 +53,8 @@ public class AuthUtil {
     /**
      * 관리자인지 확인
      * */
-    public static boolean isAdmin() {
+    @Before("@annotation(kr.rebe.deal.common.aop.AdminCheck)")
+    public static boolean adminCheck() {
         AuthDto auth = getAuth();
         isLoggedIn(auth);
         if (auth.getLoginType() == LogInTypeEnum.U) {
@@ -55,10 +63,11 @@ public class AuthUtil {
         return true;
     }
 
-    /**
+    /**Ï
      * 회원이면서 본인인지 확인
      * */
-    public static boolean isMember(Long memberSeq) {
+    @Before("@annotation(kr.rebe.deal.common.aop.MemberCheck) && args(memberSeq)")
+    public static boolean memberCheck(Long memberSeq) {
         AuthDto auth = getAuth();
         isLoggedIn(auth);
         if (memberSeq != auth.getMemberSeq() || auth.getLoginType() != LogInTypeEnum.U) {
@@ -70,7 +79,8 @@ public class AuthUtil {
     /**
      * 관리자 또는 본인인지 확인
      * */
-    public static boolean isAdminOrMember(Long memberSeq) {
+    @Before("@annotation(kr.rebe.deal.common.aop.MemberOrAdminCheck) && args(memberSeq)")
+    public static boolean memberOrAdminCheck(Long memberSeq) {
         AuthDto auth = getAuth();
         isLoggedIn(auth);
         if (memberSeq != auth.getMemberSeq() && auth.getLoginType() != LogInTypeEnum.A) {

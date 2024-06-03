@@ -1,9 +1,9 @@
-package kr.rebe.deal.controller;
+package kr.rebe.deal.product.controller;
 
+import kr.rebe.deal.common.aop.AdminCheck;
 import kr.rebe.deal.common.response.CommonResponse;
-import kr.rebe.deal.common.util.AuthUtil;
 import kr.rebe.deal.dto.ProductDto;
-import kr.rebe.deal.service.ProductService;
+import kr.rebe.deal.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +45,8 @@ public class ProductController extends CommonResponse {
      * 상품 등록
      * */
     @PostMapping
+    @AdminCheck
     public ResponseEntity<ProductDto> saveProduct(@ModelAttribute("productDto") ProductDto productDto) {
-        AuthUtil.isAdmin();
         ProductDto saveProduct = productService.saveProduct(productDto);
         return createResponseEntity(true, null, saveProduct);
     }
@@ -55,8 +55,8 @@ public class ProductController extends CommonResponse {
      * 상품 수정
      * */
     @PostMapping("/{productSeq}")
+    @AdminCheck
     public ResponseEntity<ProductDto> updateProduct(@ModelAttribute("productDto") ProductDto productDto) {
-        AuthUtil.isAdmin();
         ProductDto saveProduct = productService.updateProduct(productDto);
         return createResponseEntity(true, null, saveProduct);
     }
@@ -64,8 +64,8 @@ public class ProductController extends CommonResponse {
      * 상품 삭제
      * */
     @DeleteMapping("/{productSeq}")
+    @AdminCheck
     public ResponseEntity<ProductDto> deleteProduct(@PathVariable("productSeq") Long productSeq) {
-        AuthUtil.isAdmin();
         boolean isSuccess = productService.deleteProduct(productSeq);
         return createResponseEntity(isSuccess, null);
     }
