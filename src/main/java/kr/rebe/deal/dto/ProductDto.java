@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ProductDto {
 
+    private String prodGrpId;
+
     private Long productSeq;
 
     private String productName;
