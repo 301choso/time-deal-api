@@ -28,7 +28,7 @@ public class LowerPriceService {
         int rank = 0;
         //myProdPriceRedis.opsForZSet().add("FDB", "25000", 123);
         myProdPriceRedis.opsForZSet().add(newProduct.getProdGrpId(), String.valueOf(newProduct.getProductSeq()), newProduct.getPrice().doubleValue());
-        myProdPriceRedis.opsForZSet().rank(newProduct.getProdGrpId(), newProduct.getProductSeq()).intValue();
+        rank = myProdPriceRedis.opsForZSet().rank(newProduct.getProdGrpId(), String.valueOf(newProduct.getProductSeq())).intValue();
         return rank;
     }
 
@@ -51,7 +51,7 @@ public class LowerPriceService {
          Keyword returnInfo = new Keyword();
          //keyword를 통해 productGroup 가져오기(10개)
         List<ProductGrp> teamProdGrp = new ArrayList<>();
-        teamProdGrp = getProdUsingKeywrod(keyword);
+        teamProdGrp = getProdUsingKeyword(keyword);
 
          // 가져온 정보들을 return할 object에 넣기
         returnInfo.setKeyword(keyword);
@@ -59,16 +59,18 @@ public class LowerPriceService {
          return returnInfo;
     }
 
-    public List<ProductGrp> getProdUsingKeywrod(String keyword) {
+    public List<ProductGrp> getProdUsingKeyword(String keyword) {
         List<ProductGrp> returnInfo = new ArrayList<>();
 
-        ProductGrp teamProdGrp = new ProductGrp();
         // input 받은 keyword로 producGrptId 조회
         List<String> prodGrpIdList = new ArrayList<>();
-        prodGrpIdList = List.copyOf(myProdPriceRedis.opsForZSet().range(keyword,0, 9));
-        ProductDto tempProduct = new ProductDto();
+        prodGrpIdList = List.copyOf(myProdPriceRedis.opsForZSet().reverseRange(keyword,0, 9));
+
         List<ProductDto> tempProdList = new ArrayList<>();
+
         for(final String prodGrpId : prodGrpIdList) {
+
+            ProductGrp teamProdGrp = new ProductGrp();
             // productGroup으로 Proudct:price가져오기(10개)
             Set prodAndPriceList = new HashSet();
             prodAndPriceList = myProdPriceRedis.opsForZSet().rangeWithScores(prodGrpId,0, 9);
@@ -77,10 +79,13 @@ public class LowerPriceService {
             while (prodPriceObj.hasNext()) {
                 ObjectMapper objMapper = new ObjectMapper();
                 // {"value":00-1011-}, {"score":11000}
-                Map<String, String> prodPriceMap = objMapper.convertValue(prodPriceObj.next(), Map.class);
+                Map<String, Object> prodPriceMap = objMapper.convertValue(prodPriceObj.next(), Map.class);
+                ProductDto tempProduct = new ProductDto();
                 // Prodcut obj bind
-                tempProduct.setProductSeq(Long.valueOf(prodPriceMap.get("value")));
-                tempProduct.setPrice(Long.valueOf(prodPriceMap.get("score")));
+                String val = String.valueOf(prodPriceMap.get("value"));
+                tempProduct.setProductSeq(Long.valueOf(Integer.valueOf(val)));
+                double sco = (Double) prodPriceMap.get("score");
+                tempProduct.setPrice((long) sco);
                 tempProdList.add(tempProduct);
             }
             // 10개 product price 입력완료
