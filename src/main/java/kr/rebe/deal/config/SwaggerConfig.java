@@ -9,13 +9,13 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerConfig {
-
+    //http://localhost:8001/swagger-ui/index.html#
     @Bean
     public Docket docket() {
         return new Docket(DocumentationType.OAS_30)
                 .select()
                 .apis(RequestHandlerSelectors
-                        .basePackage("kr.rebe.deal.controller"))
+                        .basePackage("kr.rebe.deal"))
                 .paths(PathSelectors.ant("/**"))
                 .build();
     }
